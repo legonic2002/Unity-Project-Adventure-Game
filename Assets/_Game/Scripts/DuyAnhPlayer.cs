@@ -13,18 +13,23 @@ public class DuyAnhPlayer : MonoBehaviour
     private bool isGrounded=true;
     private bool isJumping = false;
     private bool isAttack = false;
+    private bool isDeath = false;
     private float horizontal;
     private string currentAnimName;
-    [SerializeField] private float jumpForce = 350;
+    [SerializeField] private float jumpForce = 400;
+    private Vector3 savePoint;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        savePoint = transform.position;
+        OnInit();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(isDeath) return;
         isGrounded = CheckGrounded();
         horizontal = Input.GetAxisRaw("Horizontal");
         if (isAttack)
@@ -80,7 +85,14 @@ public class DuyAnhPlayer : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
 
+    }
 
+    public void OnInit()
+    {
+        isDeath = false;
+        isAttack = false;
+        transform.position = savePoint;
+        ChangeAnim("idle");
     }
 
     private bool CheckGrounded()
@@ -95,8 +107,6 @@ public class DuyAnhPlayer : MonoBehaviour
         ChangeAnim("attack");
         isAttack=true;
         Invoke(nameof(ResetAttack), 0.5f);
-      GameObject ob =   Instantiate(obKunai, tfKunaiSpawn.position , Quaternion.identity);
-        ob.GetComponent<Weapon>().isThrow = true;
     }
     private void Throw()
     {
@@ -122,6 +132,16 @@ public class DuyAnhPlayer : MonoBehaviour
             anim.ResetTrigger(animName);
             currentAnimName = animName;
             anim.SetTrigger(currentAnimName);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "DeathZone")
+        {
+            isDeath = true;
+            ChangeAnim("die");
+
+            Invoke(nameof(OnInit), 1f);
         }
     }
 }

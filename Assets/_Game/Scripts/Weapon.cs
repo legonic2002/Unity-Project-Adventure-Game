@@ -5,6 +5,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     public bool isThrow;
+    [HideInInspector] public Vector3 diretion;
     [SerializeField] private float speedThrow;
 
     // Update is called once per frame
