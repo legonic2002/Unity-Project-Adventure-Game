@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class DuyAnhPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        savePoint = transform.position;
+        SavePoint();
         OnInit();
     }
 
@@ -134,6 +135,10 @@ public class DuyAnhPlayer : MonoBehaviour
             anim.SetTrigger(currentAnimName);
         }
     }
+    internal void SavePoint()
+    {
+       savePoint = transform.position;
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "DeathZone")
@@ -144,4 +149,6 @@ public class DuyAnhPlayer : MonoBehaviour
             Invoke(nameof(OnInit), 1f);
         }
     }
+
+    
 }
